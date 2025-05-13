@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make an Appointment - MediCare Hospital Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/css/style.css">
+    <style>
+        .appointment-page {
+            background-color: #f5f5f5;
+            padding: 80px 0;
+        }
+        
+        .appointment-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .appointment-info {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+        }
+        
+        .appointment-info h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .info-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        
+        .info-content h4 {
+            margin-bottom: 5px;
+        }
+        
+        .doctor-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .doctor-option {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .doctor-option:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .doctor-option.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        .doctor-option img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        
+        .doctor-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .doctor-info p {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .time-slot:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .time-slot.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .time-slot.unavailable {
+            background-color: #f8f9fa;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            .appointment-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">Medi<span>Care</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="doctors.html">Doctors</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <a href="login.html" class="login-btn">Login</a>
+                    <a href="register.html" class="register-btn">Register</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="appointment-page">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Make an Appointment</h2>
+                    <p>Book your appointment with our experienced doctors.</p>
+                </div>
+                <div class="appointment-container">
+                    <div class="form-container">
+                        <form id="appointment-form" action="#" method="POST">
+                            <div class="form-group">
+                                <label for="appointment-type">Appointment Type</label>
+                                <select id="appointment-type" name="appointment_type" class="form-control" required>
+                                    <option value="">Select Appointment Type</option>
+                                    <option value="consultation">General Consultation</option>
+                                    <option value="follow-up">Follow-up Visit</option>
+                                    <option value="emergency">Emergency</option>
+                                    <option value="specialist">Specialist Consultation</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <select id="department" name="department" class="form-control" required>
+                                    <option value="">Select Department</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="neurology">Neurology</option>
+                                    <option value="orthopedics">Orthopedics</option>
+                                    <option value="pediatrics">Pediatrics</option>
+                                    <option value="dermatology">Dermatology</option>
+                                    <option value="gynecology">Gynecology</option>
+                                    <option value="ophthalmology">Ophthalmology</option>
+                                    <option value="psychiatry">Psychiatry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Doctor</label>
+                                <div class="doctor-select">
+                                    <div class="doctor-option" data-doctor="1">
+                                        <img src="https://via.placeholder.com/60x60" alt="Doctor">
+                                        <div class="doctor-info">
+                                            <h4>Dr. John Smith</h4>
+                                            <p>Cardiologist</p>
+                                        </div>
+                                    </div>
+                                    <div class="doctor-option" data-doctor="2">
+                                        <img src="https://via.placeholder.com/60x60" alt="Doctor">
+                                        <div class="doctor-info">
+                                            <h4>Dr. Sarah Johnson</h4>
+                                            <p>Neurologist</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="selected-doctor" name="doctor_id" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-date">Appointment Date</label>
+                                <input type="date" id="appointment-date" name="appointment_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Available Time Slots</label>
+                                <div class="time-slots">
+                                    <div class="time-slot" data-time="09:00">9:00 AM</div>
+                                    <div class="time-slot" data-time="10:00">10:00 AM</div>
+                                    <div class="time-slot" data-time="11:00">11:00 AM</div>
+                                    <div class="time-slot unavailable" data-time="12:00">12:00 PM</div>
+                                    <div class="time-slot" data-time="13:00">1:00 PM</div>
+                                    <div class="time-slot" data-time="14:00">2:00 PM</div>
+                                    <div class="time-slot" data-time="15:00">3:00 PM</div>
+                                    <div class="time-slot" data-time="16:00">4:00 PM</div>
+                                </div>
+                                <input type="hidden" id="selected-time" name="appointment_time" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="symptoms">Symptoms/Reason for Visit</label>
+                                <textarea id="symptoms" name="symptoms" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Book Appointment</button>
+                        </form>
+                    </div>
+                    <div class="appointment-info">
+                        <h3>Appointment Information</h3>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>How it Works</h4>
+                                <p>Select your preferred doctor, date, and time slot. Fill in your details and submit the form to book your appointment.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Appointment Duration</h4>
+                                <p>Each appointment slot is for 1 hour. Please arrive 15 minutes before your scheduled time.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Consultation Fee</h4>
+                                <p>The consultation fee varies depending on the doctor and type of appointment. Payment can be made at the reception.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Need Help?</h4>
+                                <p>Call us at +1 234 567 890 for assistance with booking your appointment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>MediCare</h3>
+                    <p>Providing quality healthcare services for you and your family.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="doctors.html">Doctors</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Appointments</a></li>
+                        <li><a href="#">Emergency Care</a></li>
+                        <li><a href="#">Online Consultation</a></li>
+                        <li><a href="#">Laboratory Tests</a></li>
+                        <li><a href="#">Pharmacy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Medical Avenue, City</li>
+                        <li><i class="fas fa-phone"></i> +1 234 567 890</li>
+                        <li><i class="fas fa-envelope"></i> info@medicare.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 MediCare Hospital Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Doctor selection
+        const doctorOptions = document.querySelectorAll('.doctor-option');
+        doctorOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                doctorOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('selected-doctor').value = this.getAttribute('data-doctor');
+            });
+        });
+        
+        // Time slot selection
+        const timeSlots = document.querySelectorAll('.time-slot:not(.unavailable)');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', function() {
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('selected-time').value = this.getAttribute('data-time');
+            });
+        });
+    </script>
+</body>
+</html>
